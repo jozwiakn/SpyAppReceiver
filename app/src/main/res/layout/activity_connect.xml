@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context="com.example.natalia.spyappreceiver.ConnectActivity" android:background="@drawable/activity2">
+
+    <TextView android:layout_width="match_parent"
+              android:layout_height="22dp"
+              android:text="@string/Connection"
+              android:layout_alignParentTop="true"
+              android:layout_centerHorizontal="true"
+              android:textColor="#fefefe"
+              android:textSize="20sp"
+              android:textAlignment="center"
+              android:id="@+id/textView"/>
+
+    <Button
+            android:id="@+id/addBtn"
+            android:text="@string/odswiez"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:onClick="odswiez"
+            android:layout_below="@+id/textView"
+            android:layout_alignRight="@android:id/list"
+            android:layout_alignEnd="@android:id/list"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:background="@drawable/button" android:textColor="#fefefe"
+            android:textSize="20sp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:text="@string/Filtr"
+            android:id="@+id/textView2"
+            android:textColor="#fefefe"
+            android:layout_above="@android:id/list"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+
+    <ListView
+            android:id="@android:id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:drawSelectorOnTop="false"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/filtr_number"
+            android:layout_marginTop="20dp"/>
+
+    <Button
+            android:id="@+id/filtr_number"
+            android:text="@string/filtr_number"
+            android:onClick="filtr_number"
+            android:layout_width="120dp"
+            android:layout_height="40sp"
+            android:spinnerMode="dropdown"
+            android:visibility="visible"
+            android:layout_below="@+id/addBtn" android:layout_toLeftOf="@+id/filtr_date"
+            android:layout_toStartOf="@+id/filtr_date" android:background="@drawable/button"
+            android:textColor="#fefefe" android:textSize="15sp"/>
+
+    <Button
+            android:id="@+id/filtr_date"
+            android:text="@string/filtr_date"
+            android:onClick="filtr_date"
+            android:layout_width="120dp"
+            android:layout_height="40sp"
+            android:spinnerMode="dropdown"
+            android:visibility="visible"
+            android:layout_below="@+id/addBtn" android:layout_alignRight="@+id/addBtn"
+            android:layout_alignEnd="@+id/addBtn" android:background="@drawable/button" android:textColor="#fefefe"
+            android:textSize="15sp"/>
+
+</RelativeLayout>

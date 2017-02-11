@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">SpyAppReceiver</string>
+    <string name="Message">Wiadomosci</string>
+    <string name="Connection">Polaczenia</string>
+    <string name="Location">Lokalizacja</string>
+    <string name="Filtr">Filtruj:</string>
+    <string name="filtr_number">Po numerze</string>
+    <string name="filtr_date">Po dacie</string>
+    <string name="odswiez">ODSWIEZ</string>
+    <string name="mapa">MAPA</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="login">Login: </string>
+    <string name="ok">ZALOGUJ</string>
+    <string name="member">ZAPAMIETAJ</string>
+    <string name="logHint">Numer identyfikacyjny karty SIM</string>
+</resources>
