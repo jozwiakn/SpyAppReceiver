@@ -1,16 +1,12 @@
 package com.example.natalia.spyappreceiver;
 
 import android.app.ListActivity;
-import android.content.DialogInterface;
-import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -22,7 +18,7 @@ import java.util.List;
 
 public class ConnectActivity extends ListActivity {
 
-    private Class klasa;
+    private Functions functions;
 
     private String response_connect = "";
     private String url = "list_connect/";
@@ -53,26 +49,26 @@ public class ConnectActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
-        klasa = new Class(0);
-        klasa.init();
+        functions = new Functions();
+        functions.init();
 
-        listItems = klasa.listItems;
-        listItemsTemp = klasa.listItemsTemp;
+        listItems = functions.listItems;
+        listItemsTemp = functions.listItemsTemp;
 
-        listMessageDetails = klasa.listMessageDetails;
-        listMessageDetailsTemp = klasa.listMessageDetailsTemp;
+        listMessageDetails = functions.listMessageDetails;
+        listMessageDetailsTemp = functions.listMessageDetailsTemp;
 
-        listTitleDetails = klasa.listTitleDetails;
-        listTitleDetailsTemp = klasa.listTitleDetailsTemp;
+        listTitleDetails = functions.listTitleDetails;
+        listTitleDetailsTemp = functions.listTitleDetailsTemp;
 
-        number = klasa.number;
-        number_temp = klasa.number_temp;
+        number = functions.number;
+        number_temp = functions.number_temp;
 
-        date = klasa.date;
-        date_temp = klasa.date_temp;
+        date = functions.date;
+        date_temp = functions.date_temp;
 
-        mSelectedItems_nr = klasa.mSelectedItems_nr;
-        mSelectedItems_date = klasa.mSelectedItems_date;
+        mSelectedItems_nr = functions.mSelectedItems_nr;
+        mSelectedItems_date = functions.mSelectedItems_date;
 
         builder = new AlertDialog.Builder(this);
 
@@ -84,7 +80,7 @@ public class ConnectActivity extends ListActivity {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-                return klasa.adapter(view);
+                return functions.adapter(view);
             }
         };
         setListAdapter(adapter);
@@ -95,7 +91,7 @@ public class ConnectActivity extends ListActivity {
         getRequest(url);
         int clickCounter = 0;
 
-        klasa.clearLists();
+        functions.clearLists();
 
         Gson gson = new Gson();
         if (!response_connect.equals("")) {
@@ -116,7 +112,7 @@ public class ConnectActivity extends ListActivity {
                     date.add(clickCounter - 1, time);
                 }
             }
-            klasa.sweep();
+            functions.sweep();
         }
     }
 
@@ -152,20 +148,20 @@ public class ConnectActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int pos, long id) {
         super.onListItemClick(l, v, pos, id);
 
-        klasa.onListItemDialog(pos, this);
+        functions.onListItemDialog(pos, this);
     }
 
     public void filtr_number(View view) {
-        klasa.AddToArray(number, number_temp);
+        functions.AddToArray(number, number_temp);
 
         String[] numbers = new String[number_temp.size()];
-        klasa.filtr_number(this, numbers, builder, adapter);
+        functions.filtr_number(this, numbers, builder, adapter);
     }
 
     public void filtr_date(View view) {
-        klasa.AddToArray(date, date_temp);
+        functions.AddToArray(date, date_temp);
 
         String[] dates = new String[date_temp.size()];
-        klasa.filtr_date(this, dates, builder, adapter);
+        functions.filtr_date(this, dates, builder, adapter);
     }
 }

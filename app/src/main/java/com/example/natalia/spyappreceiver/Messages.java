@@ -5,10 +5,10 @@ package com.example.natalia.spyappreceiver;
  */
 public class Messages {
     public int id;
-    public String number;
-    public String start_time;
+    String number;
+    String start_time;
     public String text;
-    public String log;
+    String log;
 
     @Override
     public String toString() {

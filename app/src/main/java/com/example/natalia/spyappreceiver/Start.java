@@ -88,10 +88,6 @@ public class Start extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void location(View view) {
-        Intent intent = new Intent(this, LocationActivity.class);
-        startActivity(intent);
-    }
 
     public void zaloguj(View view) {
         if (autoCompleteTextView.length() >= 18) {

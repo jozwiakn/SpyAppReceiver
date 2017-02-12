@@ -12,32 +12,26 @@
 
     <Button
             android:layout_width="150dp"
-            android:layout_height="wrap_content"
+            android:layout_height="70sp"
             android:text="@string/Message"
             android:onClick="message"
             android:id="@+id/message"
-            android:layout_marginTop="164dp" android:background="@drawable/button" android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:textColor="#fefefe"
-            android:textSize="30sp"/>
+            android:background="@drawable/button"
+            android:textColor="#fefefe"
+            android:textSize="30sp" android:layout_centerVertical="true" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_marginBottom="10sp"/>
     <Button
             android:layout_width="150dp"
-            android:layout_height="wrap_content"
+            android:layout_height="70sp"
             android:text="@string/Connection"
             android:onClick="connect"
-            android:id="@+id/connect" android:layout_below="@+id/message"
-            android:background="@drawable/button" android:layout_alignRight="@+id/message"
-            android:layout_alignEnd="@+id/message" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:layout_marginTop="10dp" android:textColor="#fefefe"
-            android:textSize="30sp"/>
-    <Button
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="@string/Location"
-            android:onClick="location"
-            android:id="@+id/button3"
-            android:background="@drawable/button" android:layout_below="@+id/connect" android:layout_alignLeft="@+id/connect"
-            android:layout_alignStart="@+id/connect" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" android:layout_marginTop="10dp" android:textColor="#fefefe"
-            android:textSize="30sp"/>
+            android:id="@+id/connect"
+            android:background="@drawable/button"
+            android:textColor="#fefefe"
+            android:textSize="30sp"
+            android:layout_below="@+id/message" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_alignRight="@+id/message"
+            android:layout_alignEnd="@+id/message"/>
+
 </RelativeLayout>

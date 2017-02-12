@@ -1,6 +1,5 @@
 package com.example.natalia.spyappreceiver;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -15,12 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by Natalia on 29.12.2016.
  */
-public class Class {
-    public int type;
-
-    public ArrayList<String> listDate;
-    public ArrayList<String> listDateTemp;
-
+public class Functions {
     public ArrayList<String> listItems;
     public ArrayList<String> listItemsTemp; //czas i numer na liscie
     public ArrayList<String> listMessageDetails;
@@ -36,13 +30,8 @@ public class Class {
     public ArrayList<String> date;
     public ArrayList<String> date_temp; //lista dat
 
-    public ArrayList<String> listLongitude;
-    public ArrayList<String> listLongitudeTemp;
-    public ArrayList<String> listLatitude;
-    public ArrayList<String> listLatitudeTemp; //wspolrzedne
 
-    public Class(int i){
-        type = i;
+    public Functions(){
     }
 
     public void init(){
@@ -63,18 +52,6 @@ public class Class {
 
         mSelectedItems_nr = new ArrayList<>();
         mSelectedItems_date = new ArrayList<>();
-
-        if(type==1){
-            listDate = new ArrayList<>();
-            listDateTemp = new ArrayList<>();
-
-            listLongitude = new ArrayList<>();
-            listLongitudeTemp = new ArrayList<>();
-
-            listLatitude = new ArrayList<>();
-            listLatitudeTemp = new ArrayList<>();
-        }
-
 
     }
 
@@ -100,11 +77,6 @@ public class Class {
             listItems.add(index, listItemsTemp.get(i));
             listTitleDetails.add(index, listTitleDetailsTemp.get(i));
             listMessageDetails.add(index, listMessageDetailsTemp.get(i));
-            if(type==1){
-                listDate.add(index, listDateTemp.get(i));
-                listLongitude.add(index, listLongitudeTemp.get(i));
-                listLatitude.add(index, listLatitudeTemp.get(i));
-            }
             index = index + 1;
         }
     }
@@ -127,11 +99,6 @@ public class Class {
         listItems.clear();
         listMessageDetails.clear();
         listTitleDetails.clear();
-        if(type==1) {
-            listDate.clear();
-            listLatitude.clear();
-            listLongitude.clear();
-        }
         int index = 0;
 
         for (int k = 0; k < mSelectedItems.size(); k++) {
@@ -140,11 +107,6 @@ public class Class {
                     listItems.add(index, listItemsTemp.get(i));
                     listMessageDetails.add(index, listMessageDetailsTemp.get(i));
                     listTitleDetails.add(index, listTitleDetailsTemp.get(i));
-                    if(type==1){
-                        listDate.add(index, listDateTemp.get(i));
-                        listLongitude.add(index, listLongitudeTemp.get(i));
-                        listLatitude.add(index, listLatitudeTemp.get(i));
-                    }
                     index = index + 1;
                 }
             }
@@ -183,14 +145,6 @@ public class Class {
         listMessageDetailsTemp.clear();
         listTitleDetails.clear();
         listTitleDetailsTemp.clear();
-        if(type==1){
-            listDate.clear();
-            listDateTemp.clear();
-            listLatitude.clear();
-            listLongitude.clear();
-            listLatitudeTemp.clear();
-            listLongitudeTemp.clear();
-        }
     }
 
     public View adapter(View view){
