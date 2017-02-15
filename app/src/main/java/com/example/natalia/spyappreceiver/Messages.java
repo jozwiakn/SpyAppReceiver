@@ -9,6 +9,8 @@ public class Messages {
     String start_time;
     public String text;
     String log;
+    String position;
+    String state;
 
     @Override
     public String toString() {

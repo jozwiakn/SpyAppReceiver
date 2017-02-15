@@ -40,6 +40,9 @@ public class MessageActivity extends ListActivity {
     private ArrayList<String> date;
     private ArrayList<String> date_temp; //lista dat
 
+    private ArrayList<String> state; //typ wiadomosci
+    private ArrayList<String> positions; //pozycja wiadomosci - do sortowania
+
     AlertDialog.Builder builder;
 
 
@@ -48,7 +51,7 @@ public class MessageActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        functions = new Functions();
+        functions = new Functions(1);
         functions.init();
 
         listItems = functions.listItems;
@@ -68,6 +71,9 @@ public class MessageActivity extends ListActivity {
 
         mSelectedItems_nr = functions.mSelectedItems_nr;
         mSelectedItems_date = functions.mSelectedItems_date;
+
+        state = functions.state;
+        positions = functions.positions;
 
         builder = new AlertDialog.Builder(this);
 
@@ -98,7 +104,7 @@ public class MessageActivity extends ListActivity {
             List<Messages> messagesList = gson.fromJson(response_message, type2);
             for (Messages messages : messagesList) {
                 if (messages.log.equals(Start.serialNumber)) {
-                    System.out.println(messages.log);
+//                    System.out.println(messages.log);
                     String item = "                                    " + messages.start_time + "\r\n" + messages.number;
                     String item2 = "dnia: " + messages.start_time + "\r\n" + "od: " + messages.number;
                     String time = messages.start_time.substring(0, 10);
@@ -107,6 +113,8 @@ public class MessageActivity extends ListActivity {
                     listMessageDetailsTemp.add(clickCounter - 1, messages.text);
                     number.add(clickCounter - 1, messages.number);
                     date.add(clickCounter - 1, time);
+                    state.add(clickCounter-1, messages.state);
+                    positions.add(clickCounter-1, messages.position);
                 }
             }
             functions.sweep();

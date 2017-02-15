@@ -49,7 +49,7 @@ public class ConnectActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
-        functions = new Functions();
+        functions = new Functions(2);
         functions.init();
 
         listItems = functions.listItems;
@@ -102,7 +102,7 @@ public class ConnectActivity extends ListActivity {
                 if (connect.log.equals(Start.serialNumber)) {
                     String item = "                                    " + connect.start_time + "\r\n" + connect.number;
                     String item2 = "dnia: " + connect.start_time + "\r\n" + "numer: " + connect.number;
-                    String message = "czas trwania polaczenia: " + connect.time;
+                    String message = "polaczenie: " + connect.time;
                     String time = connect.start_time.substring(0, 10);
 
                     listItemsTemp.add(clickCounter++, item);

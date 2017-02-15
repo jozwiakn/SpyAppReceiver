@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Natalia on 29.12.2016.
@@ -30,11 +32,16 @@ public class Functions {
     public ArrayList<String> date;
     public ArrayList<String> date_temp; //lista dat
 
+    public ArrayList<String> state;
+    public ArrayList<String> positions;
 
-    public Functions(){
+    int type; //1 - messages, 2 - call
+
+    public Functions(int type) {
+        this.type = type;
     }
 
-    public void init(){
+    public void init() {
         listItems = new ArrayList<>();
         listItemsTemp = new ArrayList<>();
 
@@ -52,6 +59,11 @@ public class Functions {
 
         mSelectedItems_nr = new ArrayList<>();
         mSelectedItems_date = new ArrayList<>();
+
+        if (type == 1) {
+            state = new ArrayList<>(); //for messages - sent or receiver
+            positions = new ArrayList<>(); //for messages - position of cursor
+        }
 
     }
 
@@ -72,16 +84,37 @@ public class Functions {
     }
 
     public void sweep() {
-        int index = 0;
-        for (int i = listItemsTemp.size() - 1; i >= 0; i--) {
-            listItems.add(index, listItemsTemp.get(i));
-            listTitleDetails.add(index, listTitleDetailsTemp.get(i));
-            listMessageDetails.add(index, listMessageDetailsTemp.get(i));
-            index = index + 1;
+        if (type == 2) {
+            int index = 0;
+            for (int i = listItemsTemp.size() - 1; i >= 0; i--) {
+                listItems.add(index, listItemsTemp.get(i));
+                listTitleDetails.add(index, listTitleDetailsTemp.get(i));
+                listMessageDetails.add(index, listMessageDetailsTemp.get(i));
+                index = index + 1;
+            }
+        } else if (type == 1) {
+            int index = 0;
+            int maximum = Integer.parseInt(Collections.max(positions));
+//            Log.i("MAX POSITION: ", maximum);
+            int searchMax = maximum;
+            int minimum = Integer.parseInt(Collections.min(positions));
+            int searchMin = minimum;
+
+            for (int j = maximum; j >= minimum; j--) {
+                for (int i = positions.size() - 1; i >= 0; i--) {
+                    if (positions.get(i).equals(Integer.toString(j))) {
+                        Log.i("position:", positions.get(i) + " seach: " + j);
+                        listItems.add(index, listItemsTemp.get(i));
+                        listTitleDetails.add(index, listTitleDetailsTemp.get(i));
+                        listMessageDetails.add(index, listMessageDetailsTemp.get(i));
+                        index = index + 1;
+                    }
+                }
+            }
         }
     }
 
-    public void onListItemDialog(int pos, Context context){
+    public void onListItemDialog(int pos, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(listMessageDetails.get(pos))
                 .setTitle(listTitleDetails.get(pos));
@@ -138,22 +171,26 @@ public class Functions {
         builder.setCustomTitle(title);
     }
 
-    public void clearLists(){
+    public void clearLists() {
         listItems.clear();
         listItemsTemp.clear();
         listMessageDetails.clear();
         listMessageDetailsTemp.clear();
         listTitleDetails.clear();
         listTitleDetailsTemp.clear();
+        if (type == 1) {
+            positions.clear();
+            state.clear();
+        }
     }
 
-    public View adapter(View view){
+    public View adapter(View view) {
         TextView textView = (TextView) view.findViewById(android.R.id.text1);
         textView.setTextColor(Color.WHITE);
         return view;
     }
 
-    public void setPositiveB(AlertDialog.Builder builder, final ArrayList<Integer> mSelectedItems, final ArrayList<String> temp, final ArrayAdapter<String> adapter){
+    public void setPositiveB(AlertDialog.Builder builder, final ArrayList<Integer> mSelectedItems, final ArrayList<String> temp, final ArrayAdapter<String> adapter) {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();

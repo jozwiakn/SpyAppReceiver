@@ -7,7 +7,7 @@ public class Connect {
     public int id;
     public String number;
     public String start_time;
-    public String time;
+    public String time; //state
     public String log;
 
     @Override
