@@ -30,7 +30,9 @@ public class Start extends AppCompatActivity {
     private ArrayList<String> serialNrList = new ArrayList<>();
 
     private int clickCounter = 0;
-    private String response = "";
+    private String response_login = "";
+    private String response_message = "";
+    private String response_connect = "";
 
     private int layout = 0;
     private int search = 0;
@@ -46,7 +48,9 @@ public class Start extends AppCompatActivity {
         TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         myId = telemamanger.getSimSerialNumber();
 
-        getRequest();
+        getRequest("list_connect/");
+        getRequest("list_message/");
+        getRequest("list_login/");
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -66,25 +70,18 @@ public class Start extends AppCompatActivity {
             }
         });
 
-//        autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                System.out.println("LISTENER AUTO COMPLETE LIST");
-//                if(hasFocus) {
-//                    autoComplete();
-//                }
-//            }
-//        });
     }
 
     public void message(View view) {
         Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra("RESPONSE", response_message);
         startActivity(intent);
 
     }
 
     public void connect(View view) {
         Intent intent = new Intent(this, ConnectActivity.class);
+        intent.putExtra("RESPONSE", response_connect);
         startActivity(intent);
     }
 
@@ -123,11 +120,13 @@ public class Start extends AppCompatActivity {
     private void saveLog() {
         System.out.println("SAVE LOG");
         Gson gson = new Gson();
-        if (!response.equals("")) {
-            System.out.println("response");
+        if (!response_login.equals("")) {
+            System.out.println("response_login");
             Type type2 = new TypeToken<List<Login>>() {
             }.getType();
-            List<Login> loginList = gson.fromJson(response, type2);
+            Log.i("get type", "get type");
+            List<Login> loginList = gson.fromJson(response_login, type2);
+            Log.i("login", "save from Json");
             for (Login login : loginList) {
                 if(login.my_id.equals(myId)) {
                     System.out.println(login.login);
@@ -170,24 +169,44 @@ public class Start extends AppCompatActivity {
     }
 
 
-    private void getRequest() {
-        SpyAppRestClient.get("list_login/", null, new AsyncHttpResponseHandler() {
+    private void getRequest(final String url) {
+        SpyAppRestClient.get(url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 System.out.println("onSuccess");
-                if (responseBody == null) { /* empty response, alert something*/
+                if (responseBody == null) { /* empty response_login, alert something*/
                     return;
                 }
-                response = new String(responseBody);
+                switch(url){
+                    case "list_login/":
+                        response_login = new String(responseBody);
+                        break;
+                    case "list_connect/":
+                        response_connect = new String(responseBody);
+                        break;
+                    case "list_message/":
+                        response_message = new String(responseBody);
+                }
+//                response_login = new String(responseBody);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 System.out.println("onFailure");
-                if (responseBody == null) { /* empty response, alert something*/
+                if (responseBody == null) { /* empty response_login, alert something*/
                     return;
                 }
-                response = new String(responseBody);
+                switch(url){
+                    case "list_login/":
+                        response_login = new String(responseBody);
+                        break;
+                    case "list_connect/":
+                        response_connect = new String(responseBody);
+                        break;
+                    case "list_message/":
+                        response_message = new String(responseBody);
+                }
+//                response_login = new String(responseBody);
 
             }
         });
@@ -217,5 +236,4 @@ public class Start extends AppCompatActivity {
             System.exit(1);
         }
     }
-
 }

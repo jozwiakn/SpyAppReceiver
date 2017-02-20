@@ -1,12 +1,14 @@
 package com.example.natalia.spyappreceiver;
 
 import android.app.ListActivity;
+import android.graphics.PorterDuff;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -37,9 +39,15 @@ public class ConnectActivity extends ListActivity {
     private ArrayList<Integer> mSelectedItems_date; //zaznaczanie Dialog daty
 
     private ArrayList<String> number;
-    private ArrayList<String> number_temp; //lista wszystkich numerow
+    private ArrayList<String> number_temp; //lista unikalnych numerow
+    private ArrayList<String> listNumberTemp;
+
     private ArrayList<String> date;
-    private ArrayList<String> date_temp; //lista dat
+    private ArrayList<String> listDateTemp;
+    private ArrayList<String> date_temp; //lista unikalnych dat
+
+    private ArrayList<String> type; //typ polaczenia
+    private ArrayList<String> typeTemp; //typ polaczenia
 
     AlertDialog.Builder builder;
 
@@ -48,6 +56,9 @@ public class ConnectActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
+
+        Bundle extras = getIntent().getExtras();
+        response_connect = extras.getString("RESPONSE");
 
         functions = new Functions(2);
         functions.init();
@@ -63,12 +74,17 @@ public class ConnectActivity extends ListActivity {
 
         number = functions.number;
         number_temp = functions.number_temp;
+        listNumberTemp = functions.listNumberTemp;
 
         date = functions.date;
         date_temp = functions.date_temp;
+        listDateTemp = functions.listDateTemp;
 
         mSelectedItems_nr = functions.mSelectedItems_nr;
         mSelectedItems_date = functions.mSelectedItems_date;
+
+        type = functions.type;
+        typeTemp= functions.typeTemp;
 
         builder = new AlertDialog.Builder(this);
 
@@ -84,11 +100,38 @@ public class ConnectActivity extends ListActivity {
             }
         };
         setListAdapter(adapter);
+
+        addItemsOnSpinner2();
+
+//        getRequest(url);
         getAndUpdate();
     }
 
+    Spinner spinner;
+    ArrayAdapter<String> dataAdapter;
+
+    public void addItemsOnSpinner2() {
+
+        spinner = (Spinner) findViewById(R.id.spinner_connect);
+        List<String> list = new ArrayList<>();
+        list.add("wszystkie polaczenia");
+        list.add("polaczenia przychodzace");
+        list.add("polaczenia wychodzace");
+        list.add("polaczenia nieodebrane");
+        dataAdapter = new ArrayAdapter<>(this,
+                R.layout.spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.getBackground().setColorFilter(getResources().getColor(R.color.colorSpinner), PorterDuff.Mode.SRC_ATOP);
+        spinner.setAdapter(dataAdapter);
+    }
+
+    public void addListenerOnSpinnerItemSelection() {
+        spinner = (Spinner) findViewById(R.id.spinner_connect);
+        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(functions, adapter));
+    }
+
     public void getAndUpdate() {
-        getRequest(url);
+//        getRequest(url);
         int clickCounter = 0;
 
         functions.clearLists();
@@ -105,15 +148,18 @@ public class ConnectActivity extends ListActivity {
                     String message = "polaczenie: " + connect.time;
                     String time = connect.start_time.substring(0, 10);
 
-                    listItemsTemp.add(clickCounter++, item);
-                    listTitleDetailsTemp.add(clickCounter - 1, item2);
-                    listMessageDetailsTemp.add(clickCounter - 1, message);
-                    number.add(clickCounter - 1, connect.number);
-                    date.add(clickCounter - 1, time);
+                    listItemsTemp.add(clickCounter, item);
+                    listTitleDetailsTemp.add(clickCounter, item2);
+                    listMessageDetailsTemp.add(clickCounter, message);
+                    listNumberTemp.add(clickCounter, connect.number);
+                    listDateTemp.add(clickCounter, time);
+                    typeTemp.add(clickCounter, connect.time);
+                    clickCounter = clickCounter + 1;
                 }
             }
             functions.sweep();
         }
+        addListenerOnSpinnerItemSelection();
     }
 
     public void getRequest(String url) {
@@ -139,9 +185,12 @@ public class ConnectActivity extends ListActivity {
         });
     }
 
-    public void odswiez(View view) {
+    public void refresh(View view) {
+        getRequest(url);
         getAndUpdate();
         adapter.notifyDataSetChanged();
+        spinner.setAdapter(dataAdapter);
+        functions.filtr_type = false;
     }
 
     @Override
@@ -152,16 +201,18 @@ public class ConnectActivity extends ListActivity {
     }
 
     public void filtr_number(View view) {
-        functions.AddToArray(number, number_temp);
+        functions.AddToArray(functions.listNumberTemp, functions.number_temp);
 
         String[] numbers = new String[number_temp.size()];
         functions.filtr_number(this, numbers, builder, adapter);
+        spinner.setAdapter(dataAdapter);
     }
 
     public void filtr_date(View view) {
-        functions.AddToArray(date, date_temp);
+        functions.AddToArray(functions.listDateTemp, functions.date_temp);
 
         String[] dates = new String[date_temp.size()];
         functions.filtr_date(this, dates, builder, adapter);
+        spinner.setAdapter(dataAdapter);
     }
 }

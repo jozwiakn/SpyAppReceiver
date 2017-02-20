@@ -2,4 +2,16 @@
 <resources>
     <array name="numbers">503766281, 782360368, 698760553</array>
 
+    <string-array name="call_array">
+        <item>wszystkie</item>
+        <item>przychodzące</item>
+        <item>wychodzące</item>
+        <item>nieodebrane</item>
+    </string-array>
+
+    <string-array name="message_array">
+        <item>wszystkie</item>
+        <item>wyslane</item>
+        <item>odebrane</item>
+    </string-array>
 </resources>

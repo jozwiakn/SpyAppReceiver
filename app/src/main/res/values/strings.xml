@@ -13,4 +13,5 @@
     <string name="ok">ZALOGUJ</string>
     <string name="member">ZAPAMIETAJ</string>
     <string name="logHint">Numer identyfikacyjny karty SIM</string>
+    <string name="spinner_title">spinner</string>
 </resources>
