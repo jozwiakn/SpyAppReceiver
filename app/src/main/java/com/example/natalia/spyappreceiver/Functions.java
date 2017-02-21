@@ -109,7 +109,6 @@ public class Functions {
     public void sweep() {
         if (typeClass == 2) {
             int index = 0;
-            Log.i("SIZE OF ITEMS TEMP", Integer.toString(listItemsTemp.size()));
             for (int i = listItemsTemp.size() - 1; i >= 0; i--) {
                 addFromTempList(index, i);
 //                listItems.add(index, listItemsTemp.get(i));
@@ -118,8 +117,7 @@ public class Functions {
 //                type.add(index, typeTemp.get(i));
                 index = index + 1;
             }
-            Log.i("SIZE OF ITEMS", Integer.toString(listItems.size()));
-        } else if (typeClass == 1) {
+        } else if (typeClass == 1 && positions.size()!=0) {
             int index = 0;
             int maximum = Integer.parseInt(Collections.max(positions));
             int minimum = Integer.parseInt(Collections.min(positions));

@@ -88,34 +88,61 @@ public class Start extends AppCompatActivity {
 
     public void zaloguj(View view) {
         if (autoCompleteTextView.length() >= 18) {
-            System.out.println(1);
             serialNumber = autoCompleteTextView.getText().toString();
-            System.out.println(2);
             search = 0;
             for (int i = 0; i < myIdList.size(); i++) {
-                System.out.println(3);
                 if (myId.equals(myIdList.get(i)) && (serialNumber.equals(serialNrList.get(i)))) {
-                    System.out.println(4);
                     search = 1;
                 }
             }
-            if (search == 0) {
-                System.out.println(5);
-                postRequest(myId, serialNumber);
+            if (checkMessage()==0 && checkConnect()==0){
+                Toast.makeText(getApplicationContext(), "NIE MA TAKIEGO LOGINU", Toast.LENGTH_LONG).show();
             }
+            else {
+                if (search == 0) {
+                    postRequest(myId, serialNumber);
+                }
 
-            serialNumber = autoCompleteTextView.getText().toString();
-            System.out.println(6);
-            System.out.println(serialNumber);
-            System.out.println(7);
-            setContentView(R.layout.activity_start);
-            System.out.println(8);
-            layout = 1;
+                serialNumber = autoCompleteTextView.getText().toString();
+                setContentView(R.layout.activity_start);
+                layout = 1;
+            }
         } else {
             Toast.makeText(getApplicationContext(), "NUMER IDENTYFIKACYJNY JEST ZBYT KROTKI", Toast.LENGTH_LONG).show();
         }
     }
 
+    public int checkMessage(){
+        int clickCounter = 0;
+        Gson gson = new Gson();
+        if (!response_message.equals("")) {
+            Type type2 = new TypeToken<List<Messages>>() {
+            }.getType();
+            List<Messages> messagesList = gson.fromJson(response_message, type2);
+            for (Messages messages : messagesList) {
+                if (messages.log.equals(serialNumber)) {
+                    clickCounter = clickCounter + 1;
+                }
+            }
+        }
+        return clickCounter;
+    }
+
+    public int checkConnect(){
+        int clickCounter = 0;
+        Gson gson = new Gson();
+        if (!response_connect.equals("")) {
+            Type type2 = new TypeToken<List<Connect>>() {
+            }.getType();
+            List<Connect> connectList = gson.fromJson(response_connect, type2);
+            for (Connect connect : connectList) {
+                if (connect.log.equals(serialNumber)) {
+                    clickCounter = clickCounter + 1;
+                }
+            }
+        }
+        return clickCounter;
+    }
 
     private void saveLog() {
         System.out.println("SAVE LOG");

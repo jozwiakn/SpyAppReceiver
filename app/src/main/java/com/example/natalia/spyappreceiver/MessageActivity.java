@@ -60,7 +60,11 @@ public class MessageActivity extends ListActivity {
         setContentView(R.layout.activity_message);
 
         Bundle extras = getIntent().getExtras();
-        response_message = extras.getString("RESPONSE");
+        if(extras == null) {
+            response_message= "";
+        } else {
+            response_message= extras.getString("RESPONSE");
+        }
 
         functions = new Functions(1);
         functions.init();
@@ -90,6 +94,7 @@ public class MessageActivity extends ListActivity {
         positions = functions.positions;
 
         builder = new AlertDialog.Builder(this);
+
 
         adapter = new ArrayAdapter<String>(getApplicationContext(),
                 android.R.layout.simple_list_item_1,
