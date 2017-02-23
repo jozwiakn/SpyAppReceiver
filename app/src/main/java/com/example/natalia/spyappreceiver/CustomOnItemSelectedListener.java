@@ -4,16 +4,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 /**
  * Created by Natalia on 15.02.2017.
  */
-public class CustomOnItemSelectedListener implements OnItemSelectedListener {
-    Functions functions;
-    ArrayAdapter<String> dataAdapter;
+class CustomOnItemSelectedListener implements OnItemSelectedListener {
+    private Functions functions;
+    private ArrayAdapter<String> dataAdapter;
 
-    public CustomOnItemSelectedListener(Functions functions, ArrayAdapter<String> dataAdapter){
+    CustomOnItemSelectedListener(Functions functions, ArrayAdapter<String> dataAdapter){
         this.functions = functions;
         this.dataAdapter = dataAdapter;
     }
@@ -24,6 +23,5 @@ public class CustomOnItemSelectedListener implements OnItemSelectedListener {
 
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
     }
 }

@@ -8,7 +8,7 @@ import com.loopj.android.http.RequestParams;
 /**
  * Created by Natalia on 25.11.2016.
  */
-public class SpyAppRestClient {
+class SpyAppRestClient {
     private static final String BASE_URL = "http://natalia123.pythonanywhere.com/spy_app/";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
@@ -17,7 +17,7 @@ public class SpyAppRestClient {
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
-    public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+    static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getAbsoluteUrl(url), params, responseHandler);
     }
 

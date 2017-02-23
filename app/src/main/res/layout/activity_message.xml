@@ -12,16 +12,6 @@
         tools:context="com.example.natalia.spyappreceiver.MessageActivity"
         android:weightSum="1" android:background="@drawable/activity2">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="28sp"
-            android:text="@string/Filtr"
-            android:id="@+id/textView2"
-            android:textColor="#fefefe"
-            android:layout_below="@+id/refresh" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
-
 
     <ListView
             android:id="@android:id/list"
@@ -35,38 +25,36 @@
 
     <Button
             android:id="@+id/filtr_number"
-            android:text="@string/filtr_number"
             android:onClick="filtr_number"
-            android:layout_width="120dp"
-            android:layout_height="40sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:spinnerMode="dropdown"
             android:visibility="visible"
-            android:background="@drawable/button"
+            android:background="@drawable/number"
             android:textColor="#fefefe" android:textSize="15sp"
-            android:layout_alignBottom="@+id/textView2" android:layout_toLeftOf="@+id/filtr_date"
-            android:layout_toStartOf="@+id/filtr_date"/>
+            android:layout_below="@+id/spinner_message" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
 
     <Button
             android:id="@+id/filtr_date"
-            android:text="@string/filtr_date"
             android:onClick="filtr_date"
-            android:layout_width="120dp"
-            android:layout_height="40sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:spinnerMode="dropdown"
             android:visibility="visible"
-            android:background="@drawable/button" android:textColor="#fefefe"
+            android:background="@drawable/date" android:textColor="#fefefe"
             android:textSize="15sp"
-            android:layout_alignTop="@+id/filtr_number" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_below="@+id/refresh" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:layout_marginLeft="5sp"/>
 
     <Spinner
             android:id="@+id/spinner_message"
             android:prompt="@string/spinner_title"
-            android:layout_width="300sp"
-            android:layout_height="30sp"
+            android:layout_width="240sp"
+            android:layout_height="wrap_content"
             android:textAlignment="textStart"
-            android:layout_above="@+id/filtr_number" android:layout_alignLeft="@+id/filtr_number"
-            android:layout_alignStart="@+id/filtr_number"/>
+            android:layout_alignBottom="@+id/refresh" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
 
     <ImageButton
             android:layout_width="40sp"

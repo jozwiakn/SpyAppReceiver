@@ -11,26 +11,26 @@
         tools:context="com.example.natalia.spyappreceiver.Start" android:background="@drawable/activity2">
 
     <Button
-            android:layout_width="150dp"
-            android:layout_height="70sp"
-            android:text="@string/Message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="message"
             android:id="@+id/message"
-            android:background="@drawable/button"
-            android:textColor="#fefefe"
-            android:textSize="30sp" android:layout_centerVertical="true" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:layout_marginBottom="10sp"/>
-    <Button
-            android:layout_width="150dp"
-            android:layout_height="70sp"
-            android:text="@string/Connection"
-            android:onClick="connect"
-            android:id="@+id/connect"
-            android:background="@drawable/button"
+            android:background="@drawable/message"
             android:textColor="#fefefe"
             android:textSize="30sp"
-            android:layout_below="@+id/message" android:layout_alignParentLeft="true"
+            android:layout_marginTop="162dp"
+            android:layout_alignParentTop="true" android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="true" android:layout_alignParentRight="false"
+            android:layout_alignParentEnd="true" android:layout_marginBottom="10sp"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="connect"
+            android:id="@+id/connect"
+            android:background="@drawable/connect"
+            android:textColor="#fefefe"
+            android:textSize="30sp"
+            android:layout_below="@+id/message" android:layout_alignParentLeft="false"
             android:layout_alignParentStart="true" android:layout_alignRight="@+id/message"
             android:layout_alignEnd="@+id/message"/>
 

@@ -4,7 +4,6 @@ import android.app.*;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,37 +20,12 @@ import java.util.*;
 public class MessageActivity extends ListActivity {
 
     private Functions functions;
-
     private String response_message = "";
-    private String url = "list_message/";
+    private ArrayAdapter<String> adapterForList;
+    private AlertDialog.Builder builder;
 
-
-    private ArrayList<String> listItems;
-    private ArrayList<String> listItemsTemp; //czas i numer na liscie
-    private ArrayList<String> listMessageDetails;
-    private ArrayList<String> listMessageDetailsTemp; //tresc wiadomosci (szczegoly)
-    private ArrayList<String> listTitleDetails;
-    private ArrayList<String> listTitleDetailsTemp; //czas i numer (szczegoly)
-
-    private ArrayAdapter<String> adapter;
-
-    private ArrayList<Integer> mSelectedItems_nr; //zaznaczanie Dialog numery
-    private ArrayList<Integer> mSelectedItems_date; //zaznaczanie Dialog daty
-
-    private ArrayList<String> number;
-    private ArrayList<String> number_temp; //lista unikalnych numerow
-    private ArrayList<String> listNumberTemp;
-
-    private ArrayList<String> date;
-    private ArrayList<String> listDateTemp;
-    private ArrayList<String> date_temp; //lista unikalnych dat
-
-    private ArrayList<String> type; //typ wiadomosci
-    private ArrayList<String> typeTemp; //typ wiadomosci
-
-    private ArrayList<String> positions; //pozycja wiadomosci - do sortowania
-
-    AlertDialog.Builder builder;
+    private Spinner spinner;
+    private ArrayAdapter<String> adapterForType;
 
 
     @Override
@@ -67,77 +41,45 @@ public class MessageActivity extends ListActivity {
         }
 
         functions = new Functions(1);
-        functions.init();
-
-        listItems = functions.listItems;
-        listItemsTemp = functions.listItemsTemp;
-
-        listMessageDetails = functions.listMessageDetails;
-        listMessageDetailsTemp = functions.listMessageDetailsTemp;
-
-        listTitleDetails = functions.listTitleDetails;
-        listTitleDetailsTemp = functions.listTitleDetailsTemp;
-
-        number = functions.number;
-        number_temp = functions.number_temp;
-        listNumberTemp = functions.listNumberTemp;
-
-        date = functions.date;
-        date_temp = functions.date_temp;
-        listDateTemp = functions.listDateTemp;
-
-        mSelectedItems_nr = functions.mSelectedItems_nr;
-        mSelectedItems_date = functions.mSelectedItems_date;
-
-        type = functions.type;
-        typeTemp= functions.typeTemp;
-        positions = functions.positions;
 
         builder = new AlertDialog.Builder(this);
 
-
-        adapter = new ArrayAdapter<String>(getApplicationContext(),
+        adapterForList = new ArrayAdapter<String>(getApplicationContext(),
                 android.R.layout.simple_list_item_1,
-                listItems) {
-
+                functions.listItems) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 return functions.adapter(view);
             }
         };
-        setListAdapter(adapter);
-
-        addItemsOnSpinner2();
-//        getRequest(url);
+        setListAdapter(adapterForList);
+        addItemsOnSpinner();
         getAndUpdate();
     }
 
-    Spinner spinner;
-    ArrayAdapter<String> dataAdapter;
 
-    public void addItemsOnSpinner2() {
+
+    public void addItemsOnSpinner() {
         spinner = (Spinner) findViewById(R.id.spinner_message);
         List<String> list = new ArrayList<>();
         list.add("wszystkie wiadomosci");
         list.add("wiadomosci przychodzace");
         list.add("wiadomosci wychodzace");
-        dataAdapter = new ArrayAdapter<>(this,
+        adapterForType = new ArrayAdapter<>(this,
                 R.layout.spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterForType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.getBackground().setColorFilter(getResources().getColor(R.color.colorSpinner), PorterDuff.Mode.SRC_ATOP);
-        spinner.setAdapter(dataAdapter);
+        spinner.setAdapter(adapterForType);
     }
 
     public void addListenerOnSpinnerItemSelection() {
         spinner = (Spinner) findViewById(R.id.spinner_message);
-        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(functions, adapter));
+        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(functions, adapterForList));
     }
 
-    public void getAndUpdate() {
-//        getRequest(url);
+    private void getAndUpdate() {
         int clickCounter = 0;
-
        functions.clearLists();
 
         Gson gson = new Gson();
@@ -151,13 +93,13 @@ public class MessageActivity extends ListActivity {
                     String item2 = "dnia: " + messages.start_time + "\r\n" + "od: " + messages.number;
                     String time = messages.start_time.substring(0, 10);
 
-                    listItemsTemp.add(clickCounter, item);
-                    listTitleDetailsTemp.add(clickCounter, item2);
-                    listMessageDetailsTemp.add(clickCounter, messages.text);
-                    listNumberTemp.add(clickCounter, messages.number);
-                    listDateTemp.add(clickCounter, time);
-                    typeTemp.add(clickCounter, messages.state);
-                    positions.add(clickCounter, messages.position);
+                    functions.listItemsTemp.add(clickCounter, item);
+                    functions.listTitleDetailsTemp.add(clickCounter, item2);
+                    functions.listMessageDetailsTemp.add(clickCounter, messages.text);
+                    functions.listNumberTemp.add(clickCounter, messages.number);
+                    functions.listDateTemp.add(clickCounter, time);
+                    functions.typeTemp.add(clickCounter, messages.type);
+                    functions.positions.add(clickCounter, messages.position);
                     clickCounter = clickCounter + 1;
                 }
             }
@@ -166,61 +108,33 @@ public class MessageActivity extends ListActivity {
         addListenerOnSpinnerItemSelection();
     }
 
-    private void getRequest(String url) {
-        SpyAppRestClient.get(url, null, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                System.out.println("onSuccess");
-                if (responseBody == null) { /* empty response, alert something*/
-                    return;
-                }
-                response_message = new String(responseBody);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                System.out.println("onFailure");
-                if (responseBody == null) { /* empty response, alert something*/
-                    return;
-                }
-                response_message = new String(responseBody);
-
-            }
-        });
-    }
-
-
     public void refresh(View view) {
-        getRequest(url);
+        response_message = functions.getRequest("list_message/");
         getAndUpdate();
-        adapter.notifyDataSetChanged();
-        spinner.setAdapter(dataAdapter);
+        adapterForList.notifyDataSetChanged();
+        spinner.setAdapter(adapterForType);
         functions.filtr_type = false;
-        Log.i("ODSWIERZ", "FILTR TYPE = FALSE");
     }
 
     @Override
     protected void onListItemClick(ListView l, View v, int pos, long id) {
         super.onListItemClick(l, v, pos, id);
-
         functions.onListItemDialog(pos, this);
     }
 
 
 
     public void filtr_number(View view) {
-        functions.AddToArray(listNumberTemp, number_temp);
-
-        String[] numbers = new String[number_temp.size()];
-        functions.filtr_number(this, numbers, builder, adapter);
-        spinner.setAdapter(dataAdapter);
+        functions.AddToArray(functions.listNumberTemp, functions.number_temp);
+        String[] numbers = new String[functions.number_temp.size()];
+        functions.filtr_number(this, numbers, builder, adapterForList);
+        spinner.setAdapter(adapterForType);
     }
 
     public void filtr_date(View view) {
-        functions.AddToArray(listDateTemp, date_temp);
-
-        String[] dates = new String[date_temp.size()];
-        functions.filtr_date(this, dates, builder, adapter);
-        spinner.setAdapter(dataAdapter);
+        functions.AddToArray(functions.listDateTemp, functions.date_temp);
+        String[] dates = new String[functions.date_temp.size()];
+        functions.filtr_date(this, dates, builder, adapterForList);
+        spinner.setAdapter(adapterForType);
     }
 }

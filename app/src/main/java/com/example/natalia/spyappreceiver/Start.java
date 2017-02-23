@@ -21,7 +21,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Start extends AppCompatActivity {
-
     static String serialNumber;
     private static String myId;
     private AutoCompleteTextView autoCompleteTextView;
@@ -35,7 +34,6 @@ public class Start extends AppCompatActivity {
     private String response_connect = "";
 
     private int layout = 0;
-    private int search = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +41,6 @@ public class Start extends AppCompatActivity {
         setContentView(R.layout.login);
         layout=0;
 
-        System.out.println("ON CREATE START ACTIVITY");
         autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete);
         TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         myId = telemamanger.getSimSerialNumber();
@@ -55,7 +52,6 @@ public class Start extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("RUN TIMER");
                 saveLog();
             }
         }, 5 * 1000);
@@ -63,7 +59,6 @@ public class Start extends AppCompatActivity {
         autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                System.out.println("LISTENER AUTO COMPLETE LIST");
                 if(hasFocus) {
                     autoComplete();
                 }
@@ -87,6 +82,7 @@ public class Start extends AppCompatActivity {
 
 
     public void zaloguj(View view) {
+        int search;
         if (autoCompleteTextView.length() >= 18) {
             serialNumber = autoCompleteTextView.getText().toString();
             search = 0;
@@ -112,7 +108,7 @@ public class Start extends AppCompatActivity {
         }
     }
 
-    public int checkMessage(){
+    private int checkMessage(){
         int clickCounter = 0;
         Gson gson = new Gson();
         if (!response_message.equals("")) {
@@ -128,7 +124,7 @@ public class Start extends AppCompatActivity {
         return clickCounter;
     }
 
-    public int checkConnect(){
+    private int checkConnect(){
         int clickCounter = 0;
         Gson gson = new Gson();
         if (!response_connect.equals("")) {
@@ -145,21 +141,16 @@ public class Start extends AppCompatActivity {
     }
 
     private void saveLog() {
-        System.out.println("SAVE LOG");
         Gson gson = new Gson();
         if (!response_login.equals("")) {
-            System.out.println("response_login");
             Type type2 = new TypeToken<List<Login>>() {
             }.getType();
-            Log.i("get type", "get type");
             List<Login> loginList = gson.fromJson(response_login, type2);
-            Log.i("login", "save from Json");
             for (Login login : loginList) {
                 if(login.my_id.equals(myId)) {
-                    System.out.println(login.login);
                     myIdList.add(clickCounter++, login.my_id);
                     serialNrList.add(clickCounter - 1, login.login);
-                    System.out.println("add to list login");
+                    Log.i("saveLog", "add to list login");
                 }
             }
         }
@@ -167,30 +158,24 @@ public class Start extends AppCompatActivity {
     }
 
     private void autoComplete() {
-        System.out.println("AUTOCOMPLETE");
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, serialNrList);
         AutoCompleteTextView textView = (AutoCompleteTextView)
                 findViewById(R.id.auto_complete);
-        System.out.println("AUTO COMPLETE LIST size " + serialNrList.size());
         textView.setAdapter(adapter);
     }
 
     private void postRequest(String my_id, String serialNumber) {
-        System.out.println("POST REQUEST log");
         RequestParams params = new RequestParams();
         params.put("my_id", my_id);
         params.put("login", serialNumber);
-//        System.out.println("OK POST REQUESR");
         SpyAppRestClient.post("create_list/", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                System.out.println("ONSUCCESS LOGIN");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                System.out.println("ON FAILURE LOGIN");
             }
         });
     }
@@ -201,56 +186,47 @@ public class Start extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 System.out.println("onSuccess");
-                if (responseBody == null) { /* empty response_login, alert something*/
+                if (responseBody == null) {
                     return;
                 }
-                switch(url){
-                    case "list_login/":
-                        response_login = new String(responseBody);
-                        break;
-                    case "list_connect/":
-                        response_connect = new String(responseBody);
-                        break;
-                    case "list_message/":
-                        response_message = new String(responseBody);
-                }
-//                response_login = new String(responseBody);
+                saveResponse(responseBody, url);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 System.out.println("onFailure");
-                if (responseBody == null) { /* empty response_login, alert something*/
+                if (responseBody == null) {
                     return;
                 }
-                switch(url){
-                    case "list_login/":
-                        response_login = new String(responseBody);
-                        break;
-                    case "list_connect/":
-                        response_connect = new String(responseBody);
-                        break;
-                    case "list_message/":
-                        response_message = new String(responseBody);
-                }
-//                response_login = new String(responseBody);
+               saveResponse(responseBody, url);
 
             }
         });
+    }
+
+    private void saveResponse(byte[] responseBody, String url){
+        switch(url){
+            case "list_login/":
+                response_login = new String(responseBody);
+                break;
+            case "list_connect/":
+                response_connect = new String(responseBody);
+                break;
+            case "list_message/":
+                response_message = new String(responseBody);
+        }
     }
 
     @Override
     public void onBackPressed() {
         if(layout == 1) {
             autoCompleteTextView.setText("");
-            System.out.println("BAK TO LOGIN");
             setContentView(R.layout.login);
 
             autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete);
             autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    System.out.println("LISTENER AUTO COMPLETE LIST");
                     if(hasFocus) {
                         autoComplete();
                     }
