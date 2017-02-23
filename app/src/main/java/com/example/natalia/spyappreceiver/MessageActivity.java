@@ -34,10 +34,10 @@ public class MessageActivity extends ListActivity {
         setContentView(R.layout.activity_message);
 
         Bundle extras = getIntent().getExtras();
-        if(extras == null) {
-            response_message= "";
+        if (extras == null) {
+            response_message = "";
         } else {
-            response_message= extras.getString("RESPONSE");
+            response_message = extras.getString("RESPONSE");
         }
 
         functions = new Functions(1);
@@ -56,11 +56,11 @@ public class MessageActivity extends ListActivity {
         setListAdapter(adapterForList);
         addItemsOnSpinner();
         getAndUpdate();
+        response_message = functions.getRequest("list_message/");
     }
 
 
-
-    public void addItemsOnSpinner() {
+    private void addItemsOnSpinner() {
         spinner = (Spinner) findViewById(R.id.spinner_message);
         List<String> list = new ArrayList<>();
         list.add("wszystkie wiadomosci");
@@ -73,14 +73,14 @@ public class MessageActivity extends ListActivity {
         spinner.setAdapter(adapterForType);
     }
 
-    public void addListenerOnSpinnerItemSelection() {
+    private void addListenerOnSpinnerItemSelection() {
         spinner = (Spinner) findViewById(R.id.spinner_message);
         spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(functions, adapterForList));
     }
 
     private void getAndUpdate() {
         int clickCounter = 0;
-       functions.clearLists();
+        functions.clearLists();
 
         Gson gson = new Gson();
         if (!response_message.equals("")) {
@@ -99,7 +99,7 @@ public class MessageActivity extends ListActivity {
                     functions.listNumberTemp.add(clickCounter, messages.number);
                     functions.listDateTemp.add(clickCounter, time);
                     functions.typeTemp.add(clickCounter, messages.type);
-                    functions.positions.add(clickCounter, messages.position);
+                    functions.positionsTemp.add(clickCounter, messages.position);
                     clickCounter = clickCounter + 1;
                 }
             }
@@ -121,7 +121,6 @@ public class MessageActivity extends ListActivity {
         super.onListItemClick(l, v, pos, id);
         functions.onListItemDialog(pos, this);
     }
-
 
 
     public void filtr_number(View view) {

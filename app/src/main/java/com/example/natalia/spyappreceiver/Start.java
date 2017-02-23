@@ -39,7 +39,7 @@ public class Start extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        layout=0;
+        layout = 0;
 
         autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete);
         TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -59,7 +59,7 @@ public class Start extends AppCompatActivity {
         autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) {
+                if (hasFocus) {
                     autoComplete();
                 }
             }
@@ -91,10 +91,9 @@ public class Start extends AppCompatActivity {
                     search = 1;
                 }
             }
-            if (checkMessage()==0 && checkConnect()==0){
+            if (checkMessage() == 0 && checkConnect() == 0) {
                 Toast.makeText(getApplicationContext(), "NIE MA TAKIEGO LOGINU", Toast.LENGTH_LONG).show();
-            }
-            else {
+            } else {
                 if (search == 0) {
                     postRequest(myId, serialNumber);
                 }
@@ -108,7 +107,7 @@ public class Start extends AppCompatActivity {
         }
     }
 
-    private int checkMessage(){
+    private int checkMessage() {
         int clickCounter = 0;
         Gson gson = new Gson();
         if (!response_message.equals("")) {
@@ -124,7 +123,7 @@ public class Start extends AppCompatActivity {
         return clickCounter;
     }
 
-    private int checkConnect(){
+    private int checkConnect() {
         int clickCounter = 0;
         Gson gson = new Gson();
         if (!response_connect.equals("")) {
@@ -147,7 +146,7 @@ public class Start extends AppCompatActivity {
             }.getType();
             List<Login> loginList = gson.fromJson(response_login, type2);
             for (Login login : loginList) {
-                if(login.my_id.equals(myId)) {
+                if (login.my_id.equals(myId)) {
                     myIdList.add(clickCounter++, login.my_id);
                     serialNrList.add(clickCounter - 1, login.login);
                     Log.i("saveLog", "add to list login");
@@ -198,14 +197,14 @@ public class Start extends AppCompatActivity {
                 if (responseBody == null) {
                     return;
                 }
-               saveResponse(responseBody, url);
+                saveResponse(responseBody, url);
 
             }
         });
     }
 
-    private void saveResponse(byte[] responseBody, String url){
-        switch(url){
+    private void saveResponse(byte[] responseBody, String url) {
+        switch (url) {
             case "list_login/":
                 response_login = new String(responseBody);
                 break;
@@ -219,7 +218,7 @@ public class Start extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(layout == 1) {
+        if (layout == 1) {
             autoCompleteTextView.setText("");
             setContentView(R.layout.login);
 
@@ -227,14 +226,13 @@ public class Start extends AppCompatActivity {
             autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    if(hasFocus) {
+                    if (hasFocus) {
                         autoComplete();
                     }
                 }
             });
-            layout=0;
-        }
-        else{
+            layout = 0;
+        } else {
             finish();
             System.exit(1);
         }

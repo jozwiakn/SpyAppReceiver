@@ -34,9 +34,10 @@ class Functions {
     ArrayList<String> date_temp; //lista dat
     ArrayList<String> listDateTemp;
 
-    ArrayList<String> positions; //sms positions
+    ArrayList<String> positionsTemp;
+    private ArrayList<String> positions; //sms pozycja
 
-    private ArrayList<String> type; //polaczenie i wiadomosci typ
+    private ArrayList<String> type;
     ArrayList<String> typeTemp; //polaczenie i wiadomosci typ
 
     boolean filtr_type;
@@ -44,6 +45,7 @@ class Functions {
     private ArrayList<String> listMessageDetailsForType = new ArrayList<>();
     private ArrayList<String> listTitleDetailsForType = new ArrayList<>();
     private ArrayList<String> listTypeForType = new ArrayList<>();
+    private ArrayList<String> listPositionsForType;
 
     private int typeClass; //1 - messages, 2 - call
     private boolean start;
@@ -74,7 +76,9 @@ class Functions {
         mSelectedItems_date = new ArrayList<>();
 
         if (typeClass == 1) {
+            positionsTemp = new ArrayList<>(); //for messages - position of cursor
             positions = new ArrayList<>(); //for messages - position of cursor
+            listPositionsForType = new ArrayList<>();
         }
         type = new ArrayList<>();
         typeTemp = new ArrayList<>();
@@ -111,13 +115,13 @@ class Functions {
                 }
                 break;
             case 1:
-                if (positions.size() != 0) {
+                if (positionsTemp.size() != 0) {
                     index = 0;
-                    int maximum = Integer.parseInt(Collections.max(positions));
-                    int minimum = Integer.parseInt(Collections.min(positions));
+                    int maximum = Integer.parseInt(Collections.max(positionsTemp));
+                    int minimum = Integer.parseInt(Collections.min(positionsTemp));
                     for (int j = maximum; j >= minimum; j--) {
-                        for (int i = positions.size() - 1; i >= 0; i--) {
-                            if (positions.get(i).equals(Integer.toString(j))) {
+                        for (int i = positionsTemp.size() - 1; i >= 0; i--) {
+                            if (positionsTemp.get(i).equals(Integer.toString(j))) {
                                 addFromTempList(index, i);
                                 index = index + 1;
                             }
@@ -145,16 +149,37 @@ class Functions {
         listItems.clear();
         listMessageDetails.clear();
         listTitleDetails.clear();
-        if (typeClass == 2) type.clear();
+        if (typeClass == 1) positions.clear();
+        type.clear();
         int index = 0;
 
-        for (int k = 0; k < mSelectedItems.size(); k++) {
-            for (int i = listItemsTemp.size() - 1; i >= 0; i--) {
-                if (listItemsTemp.get(i).contains(array.get(mSelectedItems.get(k)))) {
-                    addFromTempList(index, i);
-                    index = index + 1;
+        switch (typeClass) {
+            case 1:
+                int maximum = Integer.parseInt(Collections.max(positionsTemp));
+                int minimum = Integer.parseInt(Collections.min(positionsTemp));
+                for (int k = 0; k < mSelectedItems.size(); k++) {
+                    for (int j = maximum; j >= minimum; j--) {
+                        for (int i = listItemsTemp.size() - 1; i >= 0; i--) {
+                            if (listItemsTemp.get(i).contains(array.get(mSelectedItems.get(k)))) {
+                                if (positionsTemp.get(i).equals(Integer.toString(j))) {
+                                    addFromTempList(index, i);
+                                    index = index + 1;
+                                }
+                            }
+                        }
+                    }
                 }
-            }
+                break;
+            case 2:
+                for (int k = 0; k < mSelectedItems.size(); k++) {
+                    for (int i = listItemsTemp.size() - 1; i >= 0; i--) {
+                        if (listItemsTemp.get(i).contains(array.get(mSelectedItems.get(k)))) {
+                            addFromTempList(index, i);
+                            index = index + 1;
+                        }
+                    }
+                }
+                break;
         }
         filtr_type = false;
     }
@@ -192,6 +217,7 @@ class Functions {
         listTitleDetails.clear();
         listTitleDetailsTemp.clear();
         if (typeClass == 1) {
+            positionsTemp.clear();
             positions.clear();
         }
         type.clear();
@@ -247,12 +273,14 @@ class Functions {
             listMessageDetailsForType.clear();
             listTitleDetailsForType.clear();
             listTypeForType.clear();
+            if (typeClass == 1) listPositionsForType.clear();
             index = 0;
             for (int i = listItems.size() - 1; i >= 0; i--) {
                 listItemsForType.add(index, listItems.get(i));
                 listMessageDetailsForType.add(index, listMessageDetails.get(i));
                 listTitleDetailsForType.add(index, listTitleDetails.get(i));
                 listTypeForType.add(index, this.type.get(i));
+                if (typeClass == 1) listPositionsForType.add(index, positions.get(i));
                 index = index + 1;
             }
             filtr_type = true;
@@ -262,6 +290,7 @@ class Functions {
         listItems.clear();
         listMessageDetails.clear();
         listTitleDetails.clear();
+        if (typeClass == 1) positions.clear();
         this.type.clear();
 
         switch (typeClass) {
@@ -279,6 +308,7 @@ class Functions {
         listItems.add(index, listItemsForType.get(i));
         listMessageDetails.add(index, listMessageDetailsForType.get(i));
         listTitleDetails.add(index, listTitleDetailsForType.get(i));
+        if (typeClass == 1) positions.add(index, listPositionsForType.get(i));
         this.type.add(index, typeTemp.get(i));
     }
 
@@ -286,9 +316,9 @@ class Functions {
         listItems.add(index, listItemsTemp.get(i));
         listTitleDetails.add(index, listTitleDetailsTemp.get(i));
         listMessageDetails.add(index, listMessageDetailsTemp.get(i));
+        if (typeClass == 1) positions.add(index, positionsTemp.get(i));
         type.add(index, typeTemp.get(i));
     }
-
 
 
     String getRequest(String url) {
@@ -323,7 +353,7 @@ class Functions {
                 selectedIncomingSms();
                 break;
             case "wiadomosci wychodzace":
-               selectedOutgoingSms();
+                selectedOutgoingSms();
                 break;
         }
     }
@@ -331,7 +361,7 @@ class Functions {
     private void selectedConnect(String type) {
         switch (type) {
             case "wszystkie polaczenia":
-               selectedAll();
+                selectedAll();
                 break;
             default:
                 selectedRestCall(type);
@@ -339,7 +369,7 @@ class Functions {
         }
     }
 
-    private void selectedAll(){
+    private void selectedAll() {
         int index = 0;
         if (!start) {
             for (int i = listTypeForType.size() - 1; i >= 0; i--) {
@@ -352,7 +382,7 @@ class Functions {
         }
     }
 
-    private void selectedIncomingSms(){
+    private void selectedIncomingSms() {
         int index = 0;
         for (int i = listTypeForType.size() - 1; i >= 0; i--) {
             if (listTypeForType.get(i).equals("1")) {
@@ -362,7 +392,7 @@ class Functions {
         }
     }
 
-    private void selectedOutgoingSms(){
+    private void selectedOutgoingSms() {
         int index = 0;
         for (int i = listTypeForType.size() - 1; i >= 0; i--) {
             if (listTypeForType.get(i).equals("2") || listTypeForType.get(i).equals("6")) {
@@ -372,7 +402,7 @@ class Functions {
         }
     }
 
-    private void selectedRestCall(String type){
+    private void selectedRestCall(String type) {
         int index = 0;
         for (int i = listTypeForType.size() - 1; i >= 0; i--) {
             if (listTypeForType.get(i).equals(type.substring(11, type.length()))) {

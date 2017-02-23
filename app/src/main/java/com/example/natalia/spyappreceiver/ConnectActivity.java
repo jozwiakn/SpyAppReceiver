@@ -36,10 +36,10 @@ public class ConnectActivity extends ListActivity {
         setContentView(R.layout.activity_connect);
 
         Bundle extras = getIntent().getExtras();
-        if(extras == null) {
-            response_connect= "";
+        if (extras == null) {
+            response_connect = "";
         } else {
-            response_connect= extras.getString("RESPONSE");
+            response_connect = extras.getString("RESPONSE");
         }
 
         functions = new Functions(2);
@@ -58,8 +58,8 @@ public class ConnectActivity extends ListActivity {
         setListAdapter(adapterForList);
         addItemsOnSpinner();
         getAndUpdate();
+        response_connect = functions.getRequest("list_connect/");
     }
-
 
 
     private void addItemsOnSpinner() {

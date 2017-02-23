@@ -12,12 +12,12 @@ class CustomOnItemSelectedListener implements OnItemSelectedListener {
     private Functions functions;
     private ArrayAdapter<String> dataAdapter;
 
-    CustomOnItemSelectedListener(Functions functions, ArrayAdapter<String> dataAdapter){
+    CustomOnItemSelectedListener(Functions functions, ArrayAdapter<String> dataAdapter) {
         this.functions = functions;
         this.dataAdapter = dataAdapter;
     }
 
-    public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         functions.filtr_type(parent.getItemAtPosition(pos).toString(), dataAdapter);
     }
 
