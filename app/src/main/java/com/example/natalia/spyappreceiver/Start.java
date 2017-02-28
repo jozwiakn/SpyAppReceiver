@@ -1,8 +1,12 @@
 package com.example.natalia.spyappreceiver;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -41,9 +45,14 @@ public class Start extends AppCompatActivity {
         setContentView(R.layout.login);
         layout = 0;
 
-        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete);
-        TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        myId = telemamanger.getSimSerialNumber();
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int PERMISSION_ALL = 1;
+            String[] PERMISSIONS = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.INTERNET};
+
+            if (!hasPermissions(this, PERMISSIONS)) {
+                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+            }
+        }
 
         getRequest("list_connect/");
         getRequest("list_message/");
@@ -52,10 +61,13 @@ public class Start extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                myId = telemamanger.getSimSerialNumber();
                 saveLog();
             }
         }, 5 * 1000);
 
+        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete);
         autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -65,6 +77,17 @@ public class Start extends AppCompatActivity {
             }
         });
 
+    }
+
+    private static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public void message(View view) {
@@ -149,7 +172,6 @@ public class Start extends AppCompatActivity {
                 if (login.my_id.equals(myId)) {
                     myIdList.add(clickCounter++, login.my_id);
                     serialNrList.add(clickCounter - 1, login.login);
-                    Log.i("saveLog", "add to list login");
                 }
             }
         }
@@ -184,7 +206,6 @@ public class Start extends AppCompatActivity {
         SpyAppRestClient.get(url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                System.out.println("onSuccess");
                 if (responseBody == null) {
                     return;
                 }
@@ -193,7 +214,6 @@ public class Start extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                System.out.println("onFailure");
                 if (responseBody == null) {
                     return;
                 }
