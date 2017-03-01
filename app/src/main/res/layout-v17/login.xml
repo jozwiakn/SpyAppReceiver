@@ -28,5 +28,4 @@
             android:layout_alignParentStart="false" android:textColor="#ffffff" android:textSize="25sp"
             android:layout_centerInParent="true"/>
 
-
 </RelativeLayout>

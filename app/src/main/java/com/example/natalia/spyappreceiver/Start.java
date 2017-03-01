@@ -44,6 +44,7 @@ public class Start extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
         layout = 0;
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -58,15 +59,6 @@ public class Start extends AppCompatActivity {
         getRequest("list_connect/");
         getRequest("list_message/");
         getRequest("list_login/");
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                myId = telemamanger.getSimSerialNumber();
-                saveLog();
-            }
-        }, 5 * 1000);
 
         autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete);
         autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -77,6 +69,17 @@ public class Start extends AppCompatActivity {
                 }
             }
         });
+
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                myId = telemamanger.getSimSerialNumber();
+                saveLog();
+            }
+        }, 5 * 1000);
 
     }
 
@@ -176,7 +179,6 @@ public class Start extends AppCompatActivity {
                 }
             }
         }
-
     }
 
     private void autoComplete() {
